@@ -1,7 +1,10 @@
-images/*
 dots/
+images/*
+nodes/*
+
 node2dot
 .DS_Store
 
 !images/example1.node.png
+!nodes/example1.node
 

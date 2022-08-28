@@ -43,6 +43,7 @@ struct Node
 };
 
 static const char *progname;
+static bool enable_color = false;
 
 static void usage(void);
 static const char *get_progname(const char *argv0);
@@ -53,6 +54,12 @@ static void print_dot_footer(void);
 
 static bool parse_node(Node **root);
 static string get_name(void);
+static string get_node_header(size_t suffix, const string& name);
+static string get_node_body(size_t suffix, const string& name);
+static string get_node_footer(void);
+static string get_node_edge(size_t src_suffix, size_t src_index,
+							size_t dst_suffix, size_t dst_index,
+							bool list);
 
 int
 main(int argc, char **argv)
@@ -63,6 +70,7 @@ main(int argc, char **argv)
 	struct option longopts[] = {
 		{"help",    no_argument, 0, 'h' },
 		{"version", no_argument, 0, 'v' },
+		{"color",   no_argument, 0, 'c' },
 		{ NULL,     0,           0,  0  }
 	};
 
@@ -76,6 +84,9 @@ main(int argc, char **argv)
 		case 'v':
 			printf("%s %s\n", progname, VERSION);
 			exit(0);
+		case 'c':
+			enable_color = true;
+			break;
 		default:
 			fprintf(stderr, "Try \"%s --help\" for more information.\n", progname);
 			exit(1);
@@ -106,6 +117,7 @@ usage(void)
 	printf("\nOptions:\n");
 	printf("  -h, --help       show this page and exit\n");
 	printf("  -v, --version    show version and exit\n");
+	printf("  -c, --color      render the output with color\n");
 }
 
 static const char *
@@ -139,20 +151,10 @@ print_dot_body(const Node *root)
 	bfs.push(root);
 
 	while (!bfs.empty()) {
+		string      nodeinfo;
 		const Node *parent = bfs.front();
-		char dot_node[NODE_LEN] = { 0 };
-		int max = sizeof(dot_node) - 1;
-		int len = 0;
 
-		len += snprintf(dot_node + len, max - len,
-						"node_%lu [\n"
-						"  label=<<table border=\"0\" cellspacing=\"0\">\n"
-						"    <tr>"
-						"      <td port=\"f0\" border=\"1\">"
-						"        <B>%s</B>"
-						"      </td>"
-						"    </tr>\n",
-						parent->suffix, parent->name.c_str());
+		nodeinfo = get_node_header(parent->suffix, parent->name);
 
 		for (size_t i = 0; i < parent->elems.size(); i++) {
 			const Node *child = parent->elems[i];
@@ -161,15 +163,13 @@ print_dot_body(const Node *root)
 				bfs.push(child);
 			}
 
-			len += snprintf(dot_node + len, max - len,
-							"    <tr><td port=\"f%lu\" border=\"1\">%s</td></tr>\n",
-							child->index, child->name.c_str());
+			nodeinfo += get_node_body(child->index, child->name);
 		}
 
-		len += snprintf(dot_node + len, max - len, "  </table>>\n];");
+		nodeinfo += get_node_footer();
 
 		if (parent->type != TYPE_LIST && parent->type != TYPE_HIDE) {
-			cout <<dot_node <<endl;
+			cout <<nodeinfo <<endl;
 		}
 
 		for (size_t i = 0; i < parent->edges.size(); i++) {
@@ -209,12 +209,10 @@ parse_node(Node **root)
 				node->suffix = node_suffix++;
 
 				top = nodes_stack.empty() ? NULL : nodes_stack.top();
-				if (top == NULL) {
-					nodes_stack.push(node);
-					cerr <<"STACK: node push " <<node->name <<" at stack "
-						 <<nodes_stack.size() <<endl;
-				} else {
-					char edge[EDGE_LEN] = { 0 };
+				if (top != NULL) {
+					size_t src_suffix, src_index;
+					size_t dst_suffix, dst_index;
+					string edgeinfo;
 
 					if (prev_is_item) {
 						Node *tmp = top;
@@ -226,28 +224,36 @@ parse_node(Node **root)
 						top->suffix = tmp->suffix;
 					}
 
+					src_suffix = top->suffix;
+					src_index = top->index;
+					dst_suffix = node->suffix;
+					dst_index = 0;
+
+					/*
+					 * We should update the source information if it's
+					 * a list type and it's elems is not empty.
+					 */
 					if (top->type == TYPE_LIST) {
-						if (top->elems.empty()) {
-							snprintf(edge, sizeof(edge), "node_%lu:f%lu -> node_%lu:f0",
-									 top->suffix, top->index, node->suffix);
-						} else {
+						if (!top->elems.empty()) {
 							Node *prev = top->elems.back();
-							snprintf(edge, sizeof(edge), "node_%lu:f0 -> node_%lu:f0",
-									 prev->suffix, node->suffix);
+
+							src_suffix = prev->suffix;
+							src_index = 0;
 						}
-					} else {
-						snprintf(edge, sizeof(edge), "node_%lu:f%lu -> node_%lu:f0",
-								 top->suffix, top->index, node->suffix);
 					}
 
-					top->edges.push_back(edge);
+					edgeinfo = get_node_edge(src_suffix, src_index,
+											 dst_suffix, dst_index,
+											 top->type == TYPE_LIST);
+
+					top->edges.push_back(edgeinfo);
 					top->elems.push_back(node);
 					node->index = top->elems.size();
-
-					nodes_stack.push(node);
-					cerr <<"STACK: node push " <<node->name <<" at stack "
-						 <<nodes_stack.size() <<endl;
 				}
+
+				nodes_stack.push(node);
+				cerr <<"STACK: node push " <<node->name <<" at stack "
+					 <<nodes_stack.size() <<endl;
 
 				prev_is_item = false;
 				break;
@@ -386,4 +392,68 @@ get_name(void)
 	}
 
 	return name;
+}
+
+static string
+get_node_header(size_t suffix, const string& name)
+{
+	char color[64] = { 0 };
+	char dot_node[NODE_LEN] = { 0 };
+
+	if (enable_color) {
+		snprintf(color, sizeof(color), "bgcolor=\"azure3\"");
+	}
+
+	snprintf(dot_node, sizeof(dot_node),
+			 "node_%lu [\n"
+			 "  label=<<table border=\"0\" cellspacing=\"0\">\n"
+			 "    <tr>\n"
+			 "      <td port=\"f0\" border=\"1\" %s>\n"
+			 "        <B>%s</B>\n"
+			 "      </td>\n"
+			 "    </tr>\n",
+			 suffix, color,name.c_str());
+
+	return string(dot_node);
+}
+
+static string
+get_node_body(size_t suffix, const string& name)
+{
+	char node[NODE_LEN] = { 0 };
+
+	snprintf(node, sizeof(node),
+			 "    <tr><td port=\"f%lu\" border=\"1\">%s</td></tr>\n",
+			 suffix, name.c_str());
+
+	return string(node);
+}
+
+static string
+get_node_footer(void)
+{
+	return string("  </table>>\n];");
+}
+
+static string
+get_node_edge(size_t src_suffix, size_t src_index,
+			  size_t dst_suffix, size_t dst_index,
+			  bool list)
+{
+	char color[64] = { 0 };
+	char edge[EDGE_LEN] = { 0 };
+
+	if (enable_color) {
+		if (list) {
+			snprintf(color, sizeof(color), "[color=blue]");
+		} else {
+			snprintf(color, sizeof(color), "[color=green]");
+		}
+	}
+
+	snprintf(edge, sizeof(edge),
+			 "node_%lu:f%lu -> node_%lu:f%lu %s;",
+			 src_suffix, src_index, dst_suffix, dst_index, color);
+
+	return string(edge);
 }

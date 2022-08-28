@@ -22,7 +22,7 @@ for file in $(ls $NODES_DIR);
 do
     if [ ! -f $IMAGES_DIR/$file.png ]; then
 	echo -n "Processing file \"$file\" ... "
-	./node2dot <$NODES_DIR/$file > $DOTS_DIR/$file.dot 2>/dev/null
+	./node2dot --color <$NODES_DIR/$file > $DOTS_DIR/$file.dot 2>/dev/null
 	$DOT -Tpng -o $IMAGES_DIR/$file.png $DOTS_DIR/$file.dot 2>/dev/null
 	echo "done"
     fi
