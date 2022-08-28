@@ -195,4 +195,27 @@ the node tree to a picture format.
 
    ![](./images/example1.node.png)
 
+## Customize Colors
+
+You can customize the node's color by providing a configuration file.
+This file only contains the node names and color names.
+
+For example:
+
+```
+QUERY webmaroon
+PLANNEDSTMT teal
+TARGETENTRY springgreen
+SEQSCAN webpurple
+RTE salmon
+VAR orchid
+```
+
+The above settings will change the color for `QUERY`, `PLANNEDSTMT`,
+`TARGETENTRY`, `SEQSCAN`, `VAR` and `RTE` nodes. Here is the output.
+
+![](./images/example1.node.customize.border.color.png)
+
+For more color names, see [here](https://graphviz.org/doc/info/colors.html).
+
 [pgNodeGraph]: https://github.com/shenyuflying/pgNodeGraph

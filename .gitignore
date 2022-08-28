@@ -6,5 +6,6 @@ node2dot
 .DS_Store
 
 !images/example1.node.png
+!images/example1.node.customize.border.color.png
 !nodes/example1.node
 

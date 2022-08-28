@@ -9,8 +9,10 @@
  */
 #include <cassert>
 #include <cstring>
+#include <fstream>
 #include <getopt.h>
 #include <iostream>
+#include <map>
 #include <queue>
 #include <stack>
 #include <string>
@@ -44,9 +46,12 @@ struct Node
 
 static const char *progname;
 static bool enable_color = false;
+static const char *color_map_file = NULL;
+static map<string, string> node_color_map;
 
 static void usage(void);
 static const char *get_progname(const char *argv0);
+static bool load_node_border_color_map(void);
 
 static void print_dot_header(void);
 static void print_dot_body(const Node *root);
@@ -60,18 +65,21 @@ static string get_node_footer(void);
 static string get_node_edge(size_t src_suffix, size_t src_index,
 							size_t dst_suffix, size_t dst_index,
 							bool list);
+static string get_node_border_color(const string& name);
+static string get_node_color(const string& name);
 
 int
 main(int argc, char **argv)
 {
 	int c;
 	int optidx;
-	const char *shortopts = "hv";
+	const char *shortopts = "hvcn:";
 	struct option longopts[] = {
-		{"help",    no_argument, 0, 'h' },
-		{"version", no_argument, 0, 'v' },
-		{"color",   no_argument, 0, 'c' },
-		{ NULL,     0,           0,  0  }
+		{"help",             no_argument,       0, 'h' },
+		{"version",          no_argument,       0, 'v' },
+		{"color",            no_argument,       0, 'c' },
+		{"node-color-map",   required_argument, 0, 'n' },
+		{ NULL,              0,                 0,  0  }
 	};
 
 	progname = get_progname(argv[0]);
@@ -87,10 +95,17 @@ main(int argc, char **argv)
 		case 'c':
 			enable_color = true;
 			break;
+		case 'n':
+			color_map_file = optarg;
+			break;
 		default:
 			fprintf(stderr, "Try \"%s --help\" for more information.\n", progname);
 			exit(1);
 		}
+	}
+
+	if (!load_node_border_color_map()) {
+		exit(1);
 	}
 
 	Node *node = NULL;
@@ -118,6 +133,8 @@ usage(void)
 	printf("  -h, --help       show this page and exit\n");
 	printf("  -v, --version    show version and exit\n");
 	printf("  -c, --color      render the output with color\n");
+	printf("  -n, --node-color-map=NODE_COLOR_MAP\n"
+		   "                   specify the border color mapping file for nodes (with -c option)\n");
 }
 
 static const char *
@@ -196,7 +213,6 @@ parse_node(Node **root)
 	stack<Node *> nodes_stack;
 
 	*root = NULL;
-
 	while ((ch = getchar()) != EOF) {
 		switch (ch) {
 		case '{': /* start a new struct node */
@@ -252,8 +268,11 @@ parse_node(Node **root)
 				}
 
 				nodes_stack.push(node);
+
+#ifdef DEBUG
 				cerr <<"STACK: node push " <<node->name <<" at stack "
 					 <<nodes_stack.size() <<endl;
+#endif
 
 				prev_is_item = false;
 				break;
@@ -263,12 +282,14 @@ parse_node(Node **root)
 				assert(!nodes_stack.empty());
 
 				top = nodes_stack.top();
+
+#ifdef DEBUG
 				cerr <<"STACK: node pop " <<top->name << " from stack "
 					 <<nodes_stack.size() <<endl;
-
-				prev_is_item = false;
+#endif
 
 				nodes_stack.pop();
+				prev_is_item = false;
 
 				if (nodes_stack.empty()) {
 					*root = top;
@@ -293,8 +314,10 @@ parse_node(Node **root)
 
 				nodes_stack.push(node);
 
+#ifdef DEBUG
 				cerr <<"STACK: list push "<< node->name << " at stack "
 					 <<nodes_stack.size() <<endl;
+#endif
 
 				prev_is_item = false;
 				break;
@@ -304,8 +327,11 @@ parse_node(Node **root)
 				assert(!nodes_stack.empty());
 
 				top = nodes_stack.top();
+
+#ifdef DEBUG
 				cerr <<"STACK: list pop " <<top->name <<" from stack "
 					 << nodes_stack.size() <<endl;
+#endif
 
 				nodes_stack.pop();
 				prev_is_item = false;
@@ -398,23 +424,28 @@ static string
 get_node_header(size_t suffix, const string& name)
 {
 	char color[64] = { 0 };
-	char dot_node[NODE_LEN] = { 0 };
+	char node[NODE_LEN] = { 0 };
+	string border_color("");
 
 	if (enable_color) {
-		snprintf(color, sizeof(color), "bgcolor=\"azure3\"");
+		border_color = get_node_border_color(name);
+
+		/* first field background color */
+		snprintf(color, sizeof(color), "%s",
+				 get_node_color(name).c_str());
 	}
 
-	snprintf(dot_node, sizeof(dot_node),
-			 "node_%lu [\n"
+	snprintf(node, sizeof(node),
+			 "node_%lu [%s\n"
 			 "  label=<<table border=\"0\" cellspacing=\"0\">\n"
 			 "    <tr>\n"
 			 "      <td port=\"f0\" border=\"1\" %s>\n"
 			 "        <B>%s</B>\n"
 			 "      </td>\n"
 			 "    </tr>\n",
-			 suffix, color,name.c_str());
+			 suffix, border_color.c_str(), color, name.c_str());
 
-	return string(dot_node);
+	return string(node);
 }
 
 static string
@@ -456,4 +487,80 @@ get_node_edge(size_t src_suffix, size_t src_index,
 			 src_suffix, src_index, dst_suffix, dst_index, color);
 
 	return string(edge);
+}
+
+static string
+get_node_border_color(const string& name)
+{
+	string color("color=black,");
+
+	if (!node_color_map.empty()) {
+		map<string, string>::iterator it = node_color_map.find(name);
+		if (it != node_color_map.end()) {
+			return "color=" + it->second;
+		}
+	} else {
+		/*
+		 * Add more default color for nodes after here. For more color name, see:
+		 * https://graphviz.org/doc/info/colors.html
+		 */
+		if (name.compare("QUERY") == 0) {
+			color = "color=skyblue,";
+		} else if (name.compare("PLANNEDSTMT") == 0) {
+			color = "color=pink,";
+		} else if (name.compare("TARGETENTRY") == 0) {
+			color = "color=sienna,";
+		}
+	}
+
+	return color;
+}
+
+static string
+get_node_color(const string& name)
+{
+	map<string, string>::iterator it = node_color_map.find(name);
+
+	if (it != node_color_map.end()) {
+		return "bgcolor=\"" + it->second + "\"";
+	}
+
+	return string("");
+}
+
+static bool
+load_node_border_color_map(void)
+{
+	ifstream infile;
+
+	if (color_map_file == NULL)
+		return true;
+
+	try {
+		string node_name, node_color;
+
+		infile.open(color_map_file);
+		if (infile.fail())
+			throw string(color_map_file);
+
+		node_color_map.clear();
+		while (infile >> node_name >> node_color) {
+			node_color_map.insert(pair<string, string>(node_name, node_color));
+		}
+
+		infile.close();
+	} catch (string e) {
+		fprintf(stderr, "%s: could not open file \"%s\" for reading\n",
+				progname, e.c_str());
+		return false;
+	}
+
+#ifdef DEBUG
+	for (map<string, string>::iterator it = node_color_map.begin();
+		 it != node_color_map.end(); ++it) {
+		cerr <<it->first << " = " <<it->second <<endl;
+	}
+#endif
+
+	return true;
 }
