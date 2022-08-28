@@ -6,7 +6,7 @@ NODES_DIR=./nodes
 DOTS_DIR=./dots
 IMAGES_DIR=./images
 
-NODE_BORDER_COLOR=./node_border_color.map
+NODE_BORDER_COLOR=./node_color.map
 
 COLORS=
 
