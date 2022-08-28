@@ -1,0 +1,7 @@
+images/*
+dots/
+node2dot
+.DS_Store
+
+!images/example1.node.png
+

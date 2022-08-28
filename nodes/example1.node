@@ -1,0 +1,128 @@
+{PLANNEDSTMT
+           :commandType 1
+           :queryId 0
+           :hasReturning false
+           :hasModifyingCTE false
+           :canSetTag true
+           :transientPlan false
+           :dependsOnRole false
+           :parallelModeNeeded false
+           :jitFlags 0
+           :planTree
+              {SEQSCAN
+              :startup_cost 0.00
+              :total_cost 22.00
+              :plan_rows 1200
+              :plan_width 40
+              :parallel_aware false
+              :parallel_safe true
+              :async_capable false
+              :plan_node_id 0
+              :targetlist (
+                 {TARGETENTRY
+                 :expr
+                    {VAR
+                    :varno 1
+                    :varattno 1
+                    :vartype 23
+                    :vartypmod -1
+                    :varcollid 0
+                    :varlevelsup 0
+                    :varnosyn 1
+                    :varattnosyn 1
+                    :location 7
+                    }
+                 :resno 1
+                 :resname id
+                 :ressortgroupref 0
+                 :resorigtbl 16394
+                 :resorigcol 1
+                 :resjunk false
+                 }
+                 {TARGETENTRY
+                 :expr
+                    {VAR
+                    :varno 1
+                    :varattno 2
+                    :vartype 25
+                    :vartypmod -1
+                    :varcollid 100
+                    :varlevelsup 0
+                    :varnosyn 1
+                    :varattnosyn 2
+                    :location 7
+                    }
+                 :resno 2
+                 :resname name
+                 :ressortgroupref 0
+                 :resorigtbl 16394
+                 :resorigcol 2
+                 :resjunk false
+                 }
+                 {TARGETENTRY
+                 :expr
+                    {VAR
+                    :varno 1
+                    :varattno 3
+                    :vartype 23
+                    :vartypmod -1
+                    :varcollid 0
+                    :varlevelsup 0
+                    :varnosyn 1
+                    :varattnosyn 3
+                    :location 7
+                    }
+                 :resno 3
+                 :resname students
+                 :ressortgroupref 0
+                 :resorigtbl 16394
+                 :resorigcol 3
+                 :resjunk false
+                 }
+              )
+              :qual <>
+              :lefttree <>
+              :righttree <>
+              :initPlan <>
+              :extParam (b)
+              :allParam (b)
+              :allParam (b)
+              :scanrelid 1
+              }
+           :rtable (
+              {RTE
+              :alias <>
+              :eref
+                 {ALIAS
+                 :aliasname class
+                 :colnames ("id" "name" "students")
+                 }
+              :rtekind 0
+              :relid 16394
+              :relkind r
+              :rellockmode 1
+              :tablesample <>
+              :lateral false
+              :inh false
+              :inFromCl true
+              :requiredPerms 2
+              :checkAsUser 0
+              :selectedCols (b 8 9 10)
+              :insertedCols (b)
+              :updatedCols (b)
+              :extraUpdatedCols (b)
+              :securityQuals <>
+              }
+           )
+           :resultRelations <>
+           :appendRelations <>
+           :subplans <>
+           :rewindPlanIDs (b)
+           :rowMarks <>
+           :relationOids (o 16394)
+           :invalItems <>
+           :paramExecTypes <>
+           :utilityStmt <>
+           :stmt_location 0
+           :stmt_len 19
+           }

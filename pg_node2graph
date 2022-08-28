@@ -1,0 +1,29 @@
+#!/bin/bash
+
+NODES_DIR=./nodes
+DOTS_DIR=./dots
+IMAGES_DIR=./images
+
+[ -d $DOTS_DIR ] || mkdir $DOTS_DIR
+[ -d $IMAGES_DIR ] || mkdir $IMAGES_DIR
+
+DOT=$(which dot)
+if [ x"$DOT" == x ]; then
+    echo "Program \"dot\" not found, please install \"dot\" firstly"
+    echo "For example:"
+    echo "  sudo apt install graphviz"
+    echo "  sudo yum install graphviz"
+    exit 1
+fi
+
+g++ node2dot.cc -o node2dot
+
+for file in $(ls $NODES_DIR);
+do
+    if [ ! -f $IMAGES_DIR/$file.png ]; then
+	echo -n "Processing file \"$file\" ... "
+	./node2dot <$NODES_DIR/$file > $DOTS_DIR/$file.dot 2>/dev/null
+	$DOT -Tpng -o $IMAGES_DIR/$file.png $DOTS_DIR/$file.dot 2>/dev/null
+	echo "done"
+    fi
+done
