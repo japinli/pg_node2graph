@@ -8,6 +8,7 @@
  *----------------------------------------------------------------------------
  */
 #include <cassert>
+#include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <getopt.h>
