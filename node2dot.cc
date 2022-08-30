@@ -166,35 +166,51 @@ print_dot_body(const Node *root)
 {
 	queue<const Node *> bfs;
 
+	/* Firstly, write the information of nodes. */
 	bfs.push(root);
-
 	while (!bfs.empty()) {
 		string      nodeinfo;
 		const Node *parent = bfs.front();
 
-		nodeinfo = get_node_header(parent->suffix, parent->name);
+		bfs.pop();
 
+		nodeinfo = get_node_header(parent->suffix, parent->name);
 		for (size_t i = 0; i < parent->elems.size(); i++) {
 			const Node *child = parent->elems[i];
 
+			/*
+			 * If this node has one or more children, we should output
+			 * it as a separat node.
+			 */
 			if (!child->elems.empty()) {
 				bfs.push(child);
 			}
 
 			nodeinfo += get_node_body(child->index, child->name);
 		}
-
 		nodeinfo += get_node_footer();
 
 		if (parent->type != TYPE_LIST && parent->type != TYPE_HIDE) {
 			cout <<nodeinfo <<endl;
 		}
+	}
 
-		for (size_t i = 0; i < parent->edges.size(); i++) {
-			cout <<parent->edges[i] <<endl;
-		}
+	/* Then, write the edges between nodes. */
+	bfs.push(root);
+	while (!bfs.empty()) {
+		const Node *curr = bfs.front();
 
 		bfs.pop();
+		for (size_t i = 0; i < curr->elems.size(); i++) {
+			bfs.push(curr->elems[i]);
+		}
+
+		for (size_t i = 0; i < curr->edges.size(); i++) {
+			cout <<curr->edges[i] <<endl;
+		}
+
+		/* Do not forget to release the memory. */
+		delete curr;
 	}
 }
 
