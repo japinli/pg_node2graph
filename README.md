@@ -34,7 +34,7 @@ postgres=# set debug_print_plan = on;
 postgres=# set debug_pretty_print = on;
 ```
 
-Then, let's execute the following SQL to retrive class information:
+Then, let's execute the following SQL to fetch the records of `class` table:
 
 ```
 postgres=# SELECT * FROM class;
