@@ -47,6 +47,7 @@ struct Node
 
 static const char *progname;
 static bool enable_color = false;
+static bool skip_empty = false;
 static const char *color_map_file = NULL;
 static map<string, string> node_color_map;
 
@@ -68,18 +69,20 @@ static string get_node_edge(size_t src_suffix, size_t src_index,
 							bool list);
 static string get_node_border_color(const string& name);
 static string get_node_color(const string& name);
+static bool name_contains_empty(const string& name);
 
 int
 main(int argc, char **argv)
 {
 	int c;
 	int optidx;
-	const char *shortopts = "hvcn:";
+	const char *shortopts = "hvcn:s";
 	struct option longopts[] = {
 		{"help",             no_argument,       0, 'h' },
 		{"version",          no_argument,       0, 'v' },
 		{"color",            no_argument,       0, 'c' },
 		{"node-color-map",   required_argument, 0, 'n' },
+		{"skip-empty",       no_argument,       0, 's' },
 		{ NULL,              0,                 0,  0  }
 	};
 
@@ -98,6 +101,9 @@ main(int argc, char **argv)
 			break;
 		case 'n':
 			color_map_file = optarg;
+			break;
+		case 's':
+			skip_empty = true;
 			break;
 		default:
 			fprintf(stderr, "Try \"%s --help\" for more information.\n", progname);
@@ -131,11 +137,12 @@ usage(void)
 	printf("\nUsage:\n");
 	printf("  node2dot [OPTIONS]\n");
 	printf("\nOptions:\n");
-	printf("  -h, --help       show this page and exit\n");
-	printf("  -v, --version    show version and exit\n");
-	printf("  -c, --color      render the output with color\n");
+	printf("  -h, --help           show this page and exit\n");
+	printf("  -v, --version        show version and exit\n");
+	printf("  -c, --color          render the output with color\n");
 	printf("  -n, --node-color-map=NODE_COLOR_MAP\n"
-		   "                   specify the border color mapping file for nodes (with -c option)\n");
+		   "                       specify the color mapping file for nodes (with -c option)\n");
+	printf("  -s, --skip-empty     skip empty fields in nodes\n");
 }
 
 static const char *
@@ -186,7 +193,10 @@ print_dot_body(const Node *root)
 				bfs.push(child);
 			}
 
-			nodeinfo += get_node_body(child->index, child->name);
+			/* Do not show empty fields if enable skip empty. */
+			if (!skip_empty || !name_contains_empty(child->name)) {
+				nodeinfo += get_node_body(child->index, child->name);
+			}
 		}
 		nodeinfo += get_node_footer();
 
@@ -580,4 +590,18 @@ load_node_color_map(void)
 #endif
 
 	return true;
+}
+
+/*
+ * Check if the name contains an empty value.  Here, the empty value
+ * here is a NULL pointer represented by "--".
+ */
+static bool
+name_contains_empty(const string& name)
+{
+	/*
+	 * NB: You could define more empty value, if you defined, change the
+	 * following code to contains your new empty value checking.
+	 */
+	return name.find("--") == string::npos;
 }
