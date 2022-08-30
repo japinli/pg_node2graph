@@ -52,7 +52,7 @@ static map<string, string> node_color_map;
 
 static void usage(void);
 static const char *get_progname(const char *argv0);
-static bool load_node_border_color_map(void);
+static bool load_node_color_map(void);
 
 static void print_dot_header(void);
 static void print_dot_body(const Node *root);
@@ -105,7 +105,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	if (!load_node_border_color_map()) {
+	if (!load_node_color_map()) {
 		exit(1);
 	}
 
@@ -530,7 +530,7 @@ get_node_color(const string& name)
 }
 
 static bool
-load_node_border_color_map(void)
+load_node_color_map(void)
 {
 	ifstream infile;
 
