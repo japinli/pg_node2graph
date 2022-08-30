@@ -493,7 +493,7 @@ get_node_edge(size_t src_suffix, size_t src_index,
 static string
 get_node_border_color(const string& name)
 {
-	string color("color=black,");
+	string color("color=black");
 
 	if (!node_color_map.empty()) {
 		map<string, string>::iterator it = node_color_map.find(name);
@@ -506,11 +506,11 @@ get_node_border_color(const string& name)
 		 * https://graphviz.org/doc/info/colors.html
 		 */
 		if (name.compare("QUERY") == 0) {
-			color = "color=skyblue,";
+			color = "color=skyblue";
 		} else if (name.compare("PLANNEDSTMT") == 0) {
-			color = "color=pink,";
+			color = "color=pink";
 		} else if (name.compare("TARGETENTRY") == 0) {
-			color = "color=sienna,";
+			color = "color=sienna";
 		}
 	}
 
