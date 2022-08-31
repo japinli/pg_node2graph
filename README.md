@@ -6,7 +6,16 @@ PostgreSQL node tree into png formatted picture, which is quite
 convenient for developing or debugging purposes.
 
 pg_node2graph comes from [pgNodeGraph][]. It is rewritten using C++, and
-improves the layout of List structure.
+contains the following features:
+
+* Improves the layout of list nodes.
+* Support customize node colors.
+
+
+## Dependencies
+
+* [Graphviz](https://graphviz.org/)
+
 
 ## Usage
 
