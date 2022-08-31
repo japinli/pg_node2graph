@@ -603,5 +603,5 @@ name_contains_empty(const string& name)
 	 * NB: You could define more empty value, if you defined, change the
 	 * following code to contains your new empty value checking.
 	 */
-	return name.find("--") == string::npos;
+	return name.find("--") != string::npos;
 }
