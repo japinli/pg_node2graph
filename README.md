@@ -238,7 +238,7 @@ QUERY, webmaroon, red
 RTE, salmon
 SEQSCAN, webpurple, white
 TARGETENTRY, springgreen
-VAR, orchid, peru
+VAR, orchid, yellow
 ALIAS, tan
 ```
 

@@ -2,9 +2,11 @@ dots/
 images/*
 nodes/*
 
+*.map
 pg_node2graph
 .DS_Store
 
+!node_color.map
 !images/example1.node.png
 !images/example1.node.customize.color.png
 !nodes/example1.node
