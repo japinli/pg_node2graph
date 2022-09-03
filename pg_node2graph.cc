@@ -186,6 +186,7 @@ main(int argc, char **argv)
 	for (int i = optind; i < argc; i++) {
 
 		printf("processing \"%s\" ... ", argv[i]);
+		fflush(stdout);
 		if (node2graph(argv[i])) {
 			printf("ok\n");
 		} else {
