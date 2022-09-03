@@ -69,7 +69,8 @@ static bool enable_skip_empty = false;
 static bool remove_dot_files = false;
 static const char *color_map_filename = NULL;
 static const char *picture_format = NULL;
-
+static const char *img_directory = NULL;
+static const char *dot_directory = NULL;
 
 static map<string, node_color_t> node_color_mapping;
 
@@ -109,17 +110,22 @@ static string get_dot_node_body(size_t suffix, const string& name);
 static string get_dot_node_footer(void);
 static bool name_contains_empty(const string& name);
 
+static string get_dot_filename(const string& pathname);
+static string get_img_filename(const string& pathname);
+
 
 int
 main(int argc, char **argv)
 {
 	int c;
-	const char *shortopts = "hvcn:rsT:";
+	const char *shortopts = "hvcD:I:n:rsT:";
 	struct option longopts[] = {
 		{ "help",           no_argument,        0, 'h' },
 		{ "version",        no_argument,        0, 'v' },
 		{ "color",          no_argument,        0, 'c' },
-		{ "node-color-map",	required_argument,  0, 'n' },
+		{ "dot-directory",  required_argument,  0, 'D' },
+		{ "img-directory",  required_argument,  0, 'I' },
+		{ "node-color-map", required_argument,  0, 'n' },
 		{ "remove-dots",    no_argument,        0, 'r' },
 		{ "skip-empty",     no_argument,        0, 's' },
 		{ NULL,             required_argument,  0, 'T' },
@@ -138,6 +144,12 @@ main(int argc, char **argv)
 			exit(0);
 		case 'c':
 			enable_color = true;
+			break;
+		case 'D':
+			dot_directory = optarg;
+			break;
+		case 'I':
+			img_directory = optarg;
 			break;
 		case 'n':
 			color_map_filename = optarg;
@@ -209,6 +221,8 @@ usage(void)
 	printf("  -h, --help           show this page and exit\n");
 	printf("  -v, --version        show version and exit\n");
 	printf("  -c, --color          render the output with color\n");
+	printf("  -D, --dot-directory  specify temporary dot files directory\n");
+	printf("  -I, --img-dorectory  specify output pictures directory\n");
 	printf("  -n, --node-color-map=NODE_COLOR_MAP\n"
 		   "                       specify the color mapping file (with -c option)\n");
 	printf("  -r, --remove-dots    remove temporary dot files\n");
@@ -403,8 +417,8 @@ node2graph(const char *filename)
 {
 	FILE *infp = NULL;
 	FILE *dotfp = NULL;
-	string dotfile(filename + string(".dot"));
-	string imgfile(filename + string(".") + picture_format);
+	string dotfile = get_dot_filename(filename);
+	string imgfile = get_img_filename(filename);
 	string dotcmd;
 	node_t *root;
 
@@ -821,4 +835,32 @@ name_contains_empty(const string& name)
 	 * following code to contains your new empty value checking.
 	 */
 	return name.find("--") != string::npos;
+}
+
+static string
+get_dot_filename(const string& pathname)
+{
+	string dot_suffix(".dot");
+
+	if (dot_directory) {
+		size_t found = pathname.find_last_of("/");
+		string name = pathname.substr(found + 1);
+		return dot_directory + string("/") + name + dot_suffix;
+	}
+
+	return pathname + dot_suffix;
+}
+
+static string
+get_img_filename(const string& pathname)
+{
+	string img_suffix(string(".") + picture_format);
+
+	if (img_directory) {
+		size_t found = pathname.find_last_of("/");
+		string name = pathname.substr(found + 1);
+		return img_directory + string("/") + name + img_suffix;
+	}
+
+	return pathname + img_suffix;
 }

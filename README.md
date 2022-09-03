@@ -271,6 +271,8 @@ Options:
   -h, --help           show this page and exit
   -v, --version        show version and exit
   -c, --color          render the output with color
+  -D, --dot-directory  specify temporary dot files directory
+  -I, --img-dorectory  specify output pictures directory
   -n, --node-color-map=NODE_COLOR_MAP
                        specify the color mapping file (with -c option)
   -r, --remove-dots    remove temporary dot files
