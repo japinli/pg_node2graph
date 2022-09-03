@@ -2,10 +2,10 @@ dots/
 images/*
 nodes/*
 
-node2dot
+pg_node2graph
 .DS_Store
 
 !images/example1.node.png
-!images/example1.node.customize.border.color.png
+!images/example1.node.customize.color.png
 !nodes/example1.node
 

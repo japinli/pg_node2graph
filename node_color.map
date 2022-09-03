@@ -1,5 +1,19 @@
-QUERY skyblue
-PLANNEDSTMT pink
-TARGETENTRY sienna
-SEQSCAN peru
-RTE violet
+# This is a color mapping configuration file for pg_node2graph.
+#
+# A comment starts with a hashtag symbol and lasts till the end of the line.
+#
+# The color mapping contains three parts:
+#
+#  - node name.
+#  - background and border color.
+#  - font color for the first field in a node (optional).
+#
+# They are separated by commas.
+
+# node name,      background color,  font color
+
+PLANNEDSTMT,      pink
+QUERY,            skyblue
+RTE,              violet,            white
+SEQSCAN,          peru,              pink
+TARGETENTRY,      sienna

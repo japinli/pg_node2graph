@@ -17,6 +17,20 @@ contains the following features:
 * [Graphviz](https://graphviz.org/)
 
 
+## Installation
+
+You can use the following commands to install `pg_node2graph`.
+
+```bash
+$ git clone https://github.com/japinli/pg_node2graph.git
+$ cd pg_node2graph
+$ make
+$ sudo make install
+```
+
+Run `sudo make uninstall` or `sudo rm /usr/local/bin/pg_node2graph` to
+uninstall `pg_node2graph`.
+
 ## Usage
 
 Firstly, we can use the following SQL to create a new table:
@@ -190,41 +204,80 @@ be more readable. Let me show you how to use pg_node2graph to convert
 the node tree to a picture format.
 
 1. Copy and paste the node tree in text form.
-2. Put it into `nodes` directory, the `nodes` directory is in the same
-   directory as pg_node2graph executable.
+2. Save it into a file, such as `nodes/example1.node`.
 3. Run pg_node2graph.
 
    ```bash
-   $ ./pg_node2graph
-   Processing file "example1.node" ... done
+   $ ./pg_node2graph nodes/example1.node
+   processing "nodes/example1.node" ... ok
    ```
 
-   After wait a moment, the node tree in png format is generated under
-   the `images` directory.
+   Now, you can see the `nodes` directory contains a file named
+   `example1.node.png`, which is our picture converted from the PostgreSQL
+   node tree.
 
    ![](./images/example1.node.png)
 
 ## Customize Colors
 
 You can customize the node's color by providing a configuration file.
-This file only contains the node names and color names.
+A comment in `pg_node2graph` configuration file starts with a hashtag symbol
+and lasts till the end of the line.
 
-For example:
+The color mapping contains three parts, separated by commas:
+
+- node name
+- background and border color
+- font color for the first record in a node
+
+For example, save the following into `test_node_color.map`:
 
 ```
-QUERY webmaroon
-PLANNEDSTMT teal
-TARGETENTRY springgreen
-SEQSCAN webpurple
-RTE salmon
-VAR orchid
+PLANNEDSTMT, teal, pink
+QUERY, webmaroon, red
+RTE, salmon
+SEQSCAN, webpurple, white
+TARGETENTRY, springgreen
+VAR, orchid, peru
+ALIAS, tan
 ```
 
 The above settings will change the color for `QUERY`, `PLANNEDSTMT`,
-`TARGETENTRY`, `SEQSCAN`, `VAR` and `RTE` nodes. Here is the output.
+`TARGETENTRY`, `SEQSCAN`, `VAR`, `ALIAS` and `RTE` nodes.
 
-![](./images/example1.node.customize.border.color.png)
+Then, run the following command:
+
+```bash
+$ ./pg_node2graph -c -n test_node_color.map nodes/example1.node
+processing "nodes/example1.node" ... ok
+```
+
+Here is the output.
+
+![](./images/example1.node.customize.color.png)
 
 For more color names, see [here](https://graphviz.org/doc/info/colors.html).
+
+Here are some other options for `pg_node2graph`.
+
+```bash
+$ ./pg_node2graph --help
+Convert PostgreSQL node tree into picture.
+
+Usage:
+  pg_node2graph [OPTIONS] <filename>...
+
+Options:
+  -h, --help           show this page and exit
+  -v, --version        show version and exit
+  -c, --color          render the output with color
+  -n, --node-color-map=NODE_COLOR_MAP
+                       specify the color mapping file (with -c option)
+  -r, --remove-dots    remove temporary dot files
+  -s, --skip-empty     skip empty fields
+  -T FORMAT            specify the format for the picture (default: png)
+
+Report bugs to <japinli@hotmail.com>
+```
 
 [pgNodeGraph]: https://github.com/shenyuflying/pgNodeGraph
