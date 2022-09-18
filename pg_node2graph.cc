@@ -113,6 +113,8 @@ static bool name_contains_empty(const string& name);
 static string get_dot_filename(const string& pathname);
 static string get_img_filename(const string& pathname);
 
+static string format_colnames(const string& name);
+
 
 int
 main(int argc, char **argv)
@@ -810,10 +812,17 @@ static string
 get_dot_node_body(size_t suffix, const string& name)
 {
 	char node_body[4096] = { 0 };
+	string node_name;
+
+	if (name.find("colnames") != string::npos) {
+		node_name = format_colnames(name);
+	} else {
+		node_name = name;
+	}
 
 	snprintf(node_body, sizeof(node_body),
 			 "    <tr><td port=\"f%lu\" border=\"1\">%s</td></tr>\n",
-			 suffix, name.c_str());
+			 suffix, node_name.c_str());
 
 	return string(node_body);
 }
@@ -864,4 +873,52 @@ get_img_filename(const string& pathname)
 	}
 
 	return pathname + img_suffix;
+}
+
+static string
+format_colnames(const string& name)
+{
+	string tmp;
+	string new_name;
+
+	if (name == "colnames --") {
+		return name;
+	}
+
+	new_name = "    \n<table border=\"0\" cellspacing=\"0\"> \n";
+	size_t pos = name.find("(");
+	new_name += "      <tr>\n";
+	new_name += "        <td>" + name.substr(0, pos + 1) + "</td>\n";
+	new_name += "        <td></td>\n";
+	new_name += "      </tr>\n";
+
+	tmp = name.substr(pos + 1);
+	tmp = ltrim(tmp);
+	while (tmp.find(' ') != string::npos) {
+		pos = tmp.find(' ');
+		string t = tmp.substr(0, pos);
+		t = rtrim(t);
+
+		new_name += "      <tr>\n";
+		new_name += "        <td></td>\n";
+		new_name += "        <td align=\"left\">" + t + "</td>\n";
+		new_name += "      </tr>\n";
+
+		if (pos == string::npos) {
+			break;
+		}
+
+		tmp = ltrim(tmp.substr(pos + 1));
+	}
+
+	if (!tmp.empty()) {
+		new_name += "      <tr>\n";
+		new_name += "        <td>" + tmp + "</td>\n";
+		new_name += "        <td></td>\n";
+		new_name += "      </tr>\n";
+	}
+
+	new_name += "    </table>\n";
+
+	return new_name;
 }
