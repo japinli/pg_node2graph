@@ -636,6 +636,7 @@ get_pg_node_name(FILE *fp)
 {
 	int ch;
 	string name;
+	string encode_name;
 
 	while ((ch = getc(fp))) {
 		if (ch == ':' || ch == '{' || ch == '}') {
@@ -670,17 +671,23 @@ get_pg_node_name(FILE *fp)
 	/*
 	 * Trim leading and trailing spaces and remove any illegal characters
 	 * of dot language.
+	 *
+	 * Also, convert special characters to HTML entities.
 	 */
 	name = trim(name);
 	for (size_t i = 0; i < name.size(); i++) {
 		if (name[i] == '"') {
-			name[i] = ' ';
-		} else if (name[i] == '<' || name[i] == '>') {
-			name[i] = '-';
+			encode_name += ' ';
+		} else if (name[i] == '<') {
+			encode_name += "&lt;";
+		} else if (name[i] == '>') {
+			encode_name += "&gt;";
+		} else {
+			encode_name += name[i];
 		}
 	}
 
-	return name;
+	return encode_name;
 }
 
 static string
