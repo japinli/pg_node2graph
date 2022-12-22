@@ -7,6 +7,8 @@
  *
  *----------------------------------------------------------------------------
  */
+#include "config.h"
+
 #include <getopt.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -22,10 +24,6 @@
 #include <vector>
 
 using namespace std;
-
-
-/* Define pg_node2graph version string. */
-#define VERSION    "0.2"
 
 
 typedef struct node_color_s

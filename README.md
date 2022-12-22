@@ -31,6 +31,16 @@ $ sudo make install
 Run `sudo make uninstall` or `sudo rm /usr/local/bin/pg_node2graph` to
 uninstall `pg_node2graph`.
 
+We can also use `meson` to compile `pg_node2graph` use the following commands.
+
+```bash
+$ git clone https://github.com/japinli/pg_node2graph.git
+$ cd pg_node2graph
+$ meson build
+$ cd build
+$ meson compile
+```
+
 ## Usage
 
 Firstly, we can use the following SQL to create a new table:
