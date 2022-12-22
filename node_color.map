@@ -11,9 +11,10 @@
 # They are separated by commas.
 
 # node name,      background color,  font color
-
-PLANNEDSTMT,      pink
-QUERY,            skyblue
-RTE,              violet,            white
-SEQSCAN,          peru,              pink
-TARGETENTRY,      sienna
+PLANNEDSTMT,      teal,              pink
+QUERY,            webmaroon,         red
+RTE,              salmon
+SEQSCAN,          webpurple,         white
+TARGETENTRY,      springgreen
+VAR,              orchid,            whitesmoke
+ALIAS,            tan

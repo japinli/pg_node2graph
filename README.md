@@ -258,28 +258,4 @@ Here is the output.
 
 For more color names, see [here](https://graphviz.org/doc/info/colors.html).
 
-Here are some other options for `pg_node2graph`.
-
-```bash
-$ ./pg_node2graph --help
-Convert PostgreSQL node tree into picture.
-
-Usage:
-  pg_node2graph [OPTIONS] <filename>...
-
-Options:
-  -h, --help           show this page and exit
-  -v, --version        show version and exit
-  -c, --color          render the output with color
-  -D, --dot-directory  specify temporary dot files directory
-  -I, --img-dorectory  specify output pictures directory
-  -n, --node-color-map=NODE_COLOR_MAP
-                       specify the color mapping file (with -c option)
-  -r, --remove-dots    remove temporary dot files
-  -s, --skip-empty     skip empty fields
-  -T FORMAT            specify the format for the picture (default: png)
-
-Report bugs to <japinli@hotmail.com>
-```
-
 [pgNodeGraph]: https://github.com/shenyuflying/pgNodeGraph
