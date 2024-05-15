@@ -22,5 +22,7 @@ configure_file(output: 'config.h', configuration: cdata)
 
 executable('pg_node2graph',
   'pg_node2graph.cc',
-  cpp_args: ['-std=c++11']
+  cpp_args: ['-std=c++11'],
+  install: true,
+  install_dir: '/usr/local/bin',
 )
