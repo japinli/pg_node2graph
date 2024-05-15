@@ -36,9 +36,10 @@ We can also use `meson` to compile `pg_node2graph` use the following commands.
 ```bash
 $ git clone https://github.com/japinli/pg_node2graph.git
 $ cd pg_node2graph
-$ meson build
+$ meson setup build
 $ cd build
 $ meson compile
+$ sudo meson install
 ```
 
 ## Usage
