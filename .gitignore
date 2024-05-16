@@ -1,6 +1,7 @@
 dots/
 images/*
 nodes/*
+site/*
 
 *.map
 pg_node2graph

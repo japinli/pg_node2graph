@@ -227,7 +227,7 @@ the node tree to a picture format.
    `example1.node.png`, which is our picture converted from the PostgreSQL
    node tree.
 
-   ![](./images/example1.node.png)
+   ![](./docs/assets/imgs/example1.node.png)
 
 ## Customize Colors
 
@@ -265,7 +265,7 @@ processing "nodes/example1.node" ... ok
 
 Here is the output.
 
-![](./images/example1.node.customize.color.png)
+![](./docs/assets/imgs/example1.node.customize.color.png)
 
 For more color names, see [here](https://graphviz.org/doc/info/colors.html).
 

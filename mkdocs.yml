@@ -1,0 +1,4 @@
+site_name: pg_node2graph
+
+theme:
+  name: readthedocs
