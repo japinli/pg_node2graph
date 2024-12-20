@@ -364,7 +364,7 @@ rtrim(const string& str)
 {
 	size_t len = str.size();
 
-	while (isspace(str[len - 1])) {
+	while (len > 0 && isspace(str[len - 1])) {
 		len--;
 	}
 
