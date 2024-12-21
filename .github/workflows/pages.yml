@@ -20,4 +20,4 @@ jobs:
       - name: Install Dependencies
         run: pip install mkdocs
       - name: Deploy Docs
-        run: mkdocs gh-deploy
+        run: mkdocs gh-deploy --force
