@@ -385,17 +385,23 @@ check_dot_program(void)
 {
 	char  retbuf[64] = { 0 };
 	FILE *pipe;
+	const char *cmd = "dot -V 2>&1";
 
 	/* The `dot` program prints the version on stderr. */
-	pipe = popen("dot -V 2>&1", "r");
+	pipe = popen(cmd, "r");
 	if (pipe == NULL) {
-		write_stderr("%s: could not find \"dot\" program: %m", progname);
+		write_stderr("%s: could not execute \"%s\" command: %m", progname, cmd);
 		return false;
 	}
 
-	fgets(retbuf, sizeof(retbuf), pipe);
+	if (fgets(retbuf, sizeof(retbuf), pipe) == NULL) {
+		write_stderr("%s: could not read \"%s\" command output", progname, cmd);
+		pclose(pipe);
+		return false;
+	}
+
 	if (pclose(pipe) != 0) {
-		write_stderr("%s: could not close pipe for \"dot -V\": %m", progname);
+		write_stderr("%s: could not close pipe for \"%s\": %m", progname, cmd);
 		return false;
 	}
 
