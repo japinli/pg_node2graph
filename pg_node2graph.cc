@@ -422,6 +422,7 @@ check_dot_program(void)
 static bool
 node2graph(const char *filename)
 {
+	bool ret = false;
 	FILE *infp = NULL;
 	FILE *dotfp = NULL;
 	string dotfile = get_dot_filename(filename);
@@ -462,6 +463,8 @@ node2graph(const char *filename)
 		goto failed;
 	}
 
+	ret = true;
+
  failed:
 
 	if (remove_dot_files) {
@@ -475,7 +478,7 @@ node2graph(const char *filename)
 		fclose(dotfp);
 	}
 
-	return true;
+	return ret;
 }
 
 static node_t *
