@@ -2,6 +2,7 @@ dots/
 images/*
 nodes/*
 site/*
+.cache/
 
 *.map
 pg_node2graph
