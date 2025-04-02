@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>pg_node2graph</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Welcome to pg_node2graph";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> pg_node2graph
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Welcome to pg_node2graph</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#install-using-make">Install using make</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#install-using-meson">Install using meson</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#uninstallation">Uninstallation</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#uninstall-using-make">Uninstall using make</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#uninstall-using-meson">Uninstall using meson</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#uninstall-directly">Uninstall directly</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#example">Example</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#customize-colors">Customize colors</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">pg_node2graph</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Welcome to pg_node2graph</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="welcome-to-pg_node2graph">Welcome to pg_node2graph</h1>
+<p>Welcome to the documentation of <a href="https://github.com/japinli/pg_node2graph">pg_node2graph</a>. </p>
+<h2 id="introduction">Introduction</h2>
+<p>The pg_node2graph is a tool that converts PostgreSQL node trees into PNG
+formatted images. It is inspired by <a href="https://github.com/shenyuflying/pgNodeGrap">pgNodeGraph</a>, rewritten in C++, and
+boasting the following features:</p>
+<ul>
+<li>Improve the layout of list nodes.</li>
+<li>Support customized node colors.</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<p>At present, you can only install pg_node2graph through source code.  There
+are two ways to install pg_node2graph: make and meson.</p>
+<h3 id="install-using-make">Install using make</h3>
+<pre><code>git clode https://github.com/japinli/pg_node2graph.git
+cd pg_node2graph
+make
+sudo make install
+</code></pre>
+<h3 id="install-using-meson">Install using meson</h3>
+<pre><code>git clode https://github.com/japinli/pg_node2graph.git
+cd pg_node2graph
+meson setup build
+cd build
+meson compile
+sudo meson install
+</code></pre>
+<h2 id="uninstallation">Uninstallation</h2>
+<h3 id="uninstall-using-make">Uninstall using make</h3>
+<p>If you install pg_node2graph through <code>make</code> command, you can remove it through
+the following command:</p>
+<pre><code>cd pg_node2graph
+sudo make uninstall
+</code></pre>
+<h3 id="uninstall-using-meson">Uninstall using meson</h3>
+<p>If you install pg_node2graph through <code>meson</code> command, you can remove it through
+the following command:</p>
+<pre><code>cd pg_node2graph/build
+sudo ninja uninstall
+</code></pre>
+<h3 id="uninstall-directly">Uninstall directly</h3>
+<p>Of course, the easist way to uninstall pg_node2graph is <code>rm</code> command, as
+following:</p>
+<pre><code>sudo rm /usr/local/bin/pg_node2graph
+</code></pre>
+<h2 id="usage">Usage</h2>
+<p>The pg_node2graph requires <a href="https://graphviz.org">Graphviz</a> graph visualization software.  To
+install <a href="https://graphviz.org">Graphviz</a>, please see the <a href="https://graphviz.org/download/">official documentation</a>.</p>
+<p>To generate a picture from the PostgreSQL node tree, you should follow the
+following three steps:</p>
+<ol>
+<li>
+<p>Prepare PostgreSQL node tree.
+   You can generate the PostgreSQL node tree into a log file by enabling the
+   following parameters:</p>
+<pre><code>SET debug_pretty_print TO on;
+SET debug_print_parse TO on;
+SET debug_print_plan TO on;
+</code></pre>
+</li>
+<li>
+<p>Extract node tree.  You can extract node tree information from the
+   PostgreSQL log file after executing the SQL query, and then save the node
+   tree into a file.</p>
+</li>
+<li>
+<p>Generate a node picture.  Use the pg_node2graph to convert the node tree
+   into a picture.</p>
+</li>
+</ol>
+<h3 id="example">Example</h3>
+<p>Firstly, create a new table <code>class</code>.</p>
+<pre><code>CREATE TABLE class(id int, name text, students int);
+</code></pre>
+<p>Then, make sure PostgreSQL output the parse and plan node tree into log file.</p>
+<pre><code>SET debug_pretty_print TO on; -- optional 
+SET debug_print_parse TO on;
+SET debug_print_plan TO on;
+</code></pre>
+<p>Let's execute the following SQL to fetch records from <code>class</code> table:</p>
+<pre><code>SELECT * FROM class;
+</code></pre>
+<p>The PostgreSQL server will output the parse node tree and plan node tree
+into the log file. According to the type of queries, the output might be
+thousands of lines. Here is the plan node tree of the above query.</p>
+<pre><code>2022-08-28 07:37:51.841 CST [22278] DETAIL:     {PLANNEDSTMT
+       :commandType 1
+       :queryId 0
+       :hasReturning false
+       :hasModifyingCTE false
+       :canSetTag true
+       :transientPlan false
+       :dependsOnRole false
+       :parallelModeNeeded false
+       :jitFlags 0
+       :planTree
+          {SEQSCAN
+          :startup_cost 0.00
+          :total_cost 22.00
+          :plan_rows 1200
+          :plan_width 40
+          :parallel_aware false
+          :parallel_safe true
+          :async_capable false
+          :plan_node_id 0
+          :targetlist (
+             {TARGETENTRY
+             :expr
+                {VAR
+                :varno 1
+                :varattno 1
+                :vartype 23
+                :vartypmod -1
+                :varcollid 0
+                :varlevelsup 0
+                :varnosyn 1
+                :varattnosyn 1
+                :location 7
+                }
+             :resno 1
+             :resname id
+             :ressortgroupref 0
+             :resorigtbl 16394
+             :resorigcol 1
+             :resjunk false
+             }
+             {TARGETENTRY
+             :expr
+                {VAR
+                :varno 1
+                :varattno 2
+                :vartype 25
+                :vartypmod -1
+                :varcollid 100
+                :varlevelsup 0
+                :varnosyn 1
+                :varattnosyn 2
+                :location 7
+                }
+             :resno 2
+             :resname name
+             :ressortgroupref 0
+             :resorigtbl 16394
+             :resorigcol 2
+             :resjunk false
+             }
+             {TARGETENTRY
+             :expr
+                {VAR
+                :varno 1
+                :varattno 3
+                :vartype 23
+                :vartypmod -1
+                :varcollid 0
+                :varlevelsup 0
+                :varnosyn 1
+                :varattnosyn 3
+                :location 7
+                }
+             :resno 3
+             :resname students
+             :ressortgroupref 0
+             :resorigtbl 16394
+             :resorigcol 3
+             :resjunk false
+             }
+          )
+          :qual &lt;&gt;
+          :lefttree &lt;&gt;
+          :righttree &lt;&gt;
+          :initPlan &lt;&gt;
+          :extParam (b)
+          :allParam (b)
+          :allParam (b)
+          :scanrelid 1
+          }
+       :rtable (
+          {RTE
+          :alias &lt;&gt;
+          :eref
+             {ALIAS
+             :aliasname class
+             :colnames ("id" "name" "students")
+             }
+          :rtekind 0
+          :relid 16394
+          :relkind r
+          :rellockmode 1
+          :tablesample &lt;&gt;
+          :lateral false
+          :inh false
+          :inFromCl true
+          :requiredPerms 2
+          :checkAsUser 0
+          :selectedCols (b 8 9 10)
+          :insertedCols (b)
+          :updatedCols (b)
+          :extraUpdatedCols (b)
+          :securityQuals &lt;&gt;
+          }
+       )
+       :resultRelations &lt;&gt;
+       :appendRelations &lt;&gt;
+       :subplans &lt;&gt;
+       :rewindPlanIDs (b)
+       :rowMarks &lt;&gt;
+       :relationOids (o 16394)
+       :invalItems &lt;&gt;
+       :paramExecTypes &lt;&gt;
+       :utilityStmt &lt;&gt;
+       :stmt_location 0
+       :stmt_len 19
+       }
+</code></pre>
+<p>You should copy and paste the node tree in text form and save it into a file,
+such as <code>nodes/example1.node</code>.</p>
+<p>Finally, run the following command to generate a picture for <code>nodes/example1.node</code>.</p>
+<pre><code>pg_node2graph nodes/example1.node
+</code></pre>
+<p>If there is no erros, you will see message like this.</p>
+<pre><code>processing "nodes/example1.node" ... ok
+</code></pre>
+<p>At last, you can see the <code>nodes</code> directory contains a file named
+<code>example1.node.png</code>, which is our picture converted from the
+<code>nodes/example1.node</code>.</p>
+<p><img alt="Picture without color" src="assets/imgs/example1.node.png" /></p>
+<h3 id="customize-colors">Customize colors</h3>
+<p>The pg_node2graph supports customizing the node's color by providing a color
+mapping configuration file.</p>
+<p>In the configuration file, lines that begin with the hash symbol are comments.
+The blank lines will be ignored.  The other lines are color mappings.</p>
+<p>The color mapping configuration contains three parts, separated by commas:</p>
+<ul>
+<li>node name</li>
+<li>background and border-color</li>
+<li>font color of the first record in a node (optional)</li>
+</ul>
+<p>For example:</p>
+<pre><code>PLANNEDSTMT, teal, pink
+QUERY, webmaroon, red
+RTE, salmon
+SEQSCAN, webpurple, white
+TARGETENTRY, springgreen
+VAR, orchid, whitesmoke
+ALIAS, tan
+</code></pre>
+<p>The above mappings will change the color for <code>PLANNEDSTMT</code>, <code>QUERY</code>, <code>RTE</code>,
+<code>SEQSCAN</code>, <code>TARGETENTRY</code>, <code>VAR</code> and <code>ALIAS</code> nodes.  Assuming we save it
+into <code>test_node_color.map</code>, you can run the following command to generate
+a new picture with colors.</p>
+<pre><code>pg_node2graph -c -n test_node_color.map nodes/example1.node
+</code></pre>
+<p>Here is the new picture with colors.</p>
+<p><img alt="Picture with colors" src="assets/imgs/example1.node.customize.color.png" /></p>
+<p>You can visit <a href="https://graphviz.org/doc/info/colors.html">here</a> to find more
+color names.</p>
+<p>Enjoy yourself!</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2025-04-02 14:38:21.560061+00:00
+-->
